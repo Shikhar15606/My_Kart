@@ -3,14 +3,14 @@ const router = express.Router();
 const { Product } = require("../models/Product");
 const cloudinary = require('cloudinary')
 
-const { auth,isadmin } = require("../middleware/auth");
-const {User} = require('../models/User');
+const { auth, isadmin } = require("../middleware/auth");
+const { User } = require('../models/User');
 const { forEach } = require('async');
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUD_NAME ,
-    api_key: process.env.CLOUD_KEY ,
-    api_secret: process.env.CLOUD_SECRET ,
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_KEY,
+    api_secret: process.env.CLOUD_SECRET,
 });
 
 //=================================
@@ -18,7 +18,7 @@ cloudinary.config({
 //=================================
 
 
-router.post("/uploadProduct", auth, isadmin , (req, res) => {
+router.post("/uploadProduct", auth, isadmin, (req, res) => {
 
     //save all the data we got from the client into the DB 
     const product = new Product(req.body)
@@ -96,118 +96,113 @@ router.get("/products_by_id", (req, res) => {
         productIds = ids.map(item => {
             return item
         })
-    //we need to find the product information that belong to product Id 
-    Product.find({ '_id': { $in: productIds } })
-        .populate('writer')
-        .exec((err, product) => {
-            console.log(product)
-            if (err) return res.status(400).send(err)
-            return res.status(200).send(product)
-        })
+        //we need to find the product information that belong to product Id 
+        Product.find({ '_id': { $in: productIds } })
+            .populate('writer')
+            .exec((err, product) => {
+                console.log(product)
+                if (err) return res.status(400).send(err)
+                return res.status(200).send(product)
+            })
     }
-    else
-    {
-        Product.findOneAndUpdate({ '_id': { $in: productIds } },{ $inc: { views: 1 }})
-        .populate('writer')
-        .exec((err, product) => {
-            console.log(product)
-            if (err) return res.status(400).send(err)
-            return res.status(200).send(product)
-        })
+    else {
+        Product.findOneAndUpdate({ '_id': { $in: productIds } }, { $inc: { views: 1 } })
+            .populate('writer')
+            .exec((err, product) => {
+                console.log(product)
+                if (err) return res.status(400).send(err)
+                return res.status(200).send(product)
+            })
     }
 });
 
-const deletefiles = (path) =>{
-    cloudinary.v2.uploader.destroy(path,(err,response)=>{
-        if(err) console.log(err)
-        if(response) console.log(response)
+const deletefiles = (path) => {
+    cloudinary.v2.uploader.destroy(path, (err, response) => {
+        if (err) console.log(err)
+        if (response) console.log(response)
         return
     })
 }
 
-router.get("/delete/:product_id",(req, res) => {
+router.get("/delete/:product_id", (req, res) => {
     let id = req.params.product_id;
     console.log("req.params.id", id)
-    Product.findOne({_id:id},(err,product) => {
-        if(err)
-        return res.status(200).json({err:err})
-        else
-        {
+    Product.findOne({ _id: id }, (err, product) => {
+        if (err)
+            return res.status(200).json({ err: err })
+        else {
             product.images.map(deletefiles)
-            User.find({},(err,users) => {
-                if(err)
-                {
-                    return res.status(200).json({err:err})
+            User.find({}, (err, users) => {
+                if (err) {
+                    return res.status(200).json({ err: err })
                 }
-                users.forEach((user)=>{
+                users.forEach((user) => {
                     {
                         User.findOneAndUpdate(
-                            { '_id': { $in: [user] }},                        
+                            { '_id': { $in: [user] } },
                             {
                                 "$pull":
                                     { "cart": { "id": req.params.product_id } }
                             }
                         )
-                        .exec(()=>{
-                            console.log("\nWorked")
-                        })
-    
+                            .exec(() => {
+                                console.log("\nWorked")
+                            })
+
                     }
                 })
             })
-            .exec((err,success)=>{
-                Product.deleteOne(product,(err,success) => {
-                    if(err)
-                    {
-                        return res.status(200).json({err:err})
-                    }
-                    return res.status(200).json({success:true})
+                .exec((err, success) => {
+                    Product.deleteOne(product, (err, success) => {
+                        if (err) {
+                            return res.status(200).json({ err: err })
+                        }
+                        return res.status(200).json({ success: true })
+                    })
+                    console.log("\nerror : ", err)
+                    console.log("\nChala : ", success)
                 })
-                console.log("\nerror : ",err)
-                console.log("\nChala : ",success)
-            })
         }
     })
 });
 
-router.post("/stock/:product_id",(req, res) => {
+router.post("/stock/:product_id", (req, res) => {
     let id = req.params.product_id;
     let newstock = req.body.newstock;
     let newprice = req.body.newprice;
-    Product.findByIdAndUpdate({'_id':id},{ $set: { 'stock': newstock, 'price':newprice }},(err,product) => {
-        if(err) return res.status(200).json({err:err})
-        User.find({},(err,users) => {
-            if(err) return res.status(200).json({err:err})
-            users.forEach((user)=>{
+    Product.findByIdAndUpdate({ '_id': id }, { $set: { 'stock': newstock, 'price': newprice } }, (err, product) => {
+        if (err) return res.status(200).json({ err: err })
+        User.find({}, (err, users) => {
+            if (err) return res.status(200).json({ err: err })
+            users.forEach((user) => {
                 {
-                    User.findOne({'_id': { $in: [user] }})
-                    .exec((err,user)=>{
-                        if(err) return res.status(200).json({err:err})
-                        let cart = user.cart;
-                        let array = cart.map(item => {
-                            return ({ id:item.id,quantity:item.quantity})
-                        })
-                        array.forEach((item)=>{
-                            Product.findOne({'_id':item.id})
-                            .exec((err,ItemDetail)=>{
-                                if (err) return res.status(400).send(err);
-                                if(item.quantity > ItemDetail.stock)
-                                {
-                                    User.findOneAndUpdate({ '_id': user._id },{"$pull":{ "cart": { "id": item.id } }},{ new: true },
-                                        (err, userInfo) => {
-                                        if (err) return res.status(400).send(err); 
-                                        })
-                                }
+                    User.findOne({ '_id': { $in: [user] } })
+                        .exec((err, user) => {
+                            if (err) return res.status(200).json({ err: err })
+                            let cart = user.cart;
+                            let array = cart.map(item => {
+                                return ({ id: item.id, quantity: item.quantity })
+                            })
+                            array.forEach((item) => {
+                                Product.findOne({ '_id': item.id })
+                                    .exec((err, ItemDetail) => {
+                                        if (err) return res.status(400).send(err);
+                                        if (item.quantity > ItemDetail.stock) {
+                                            User.findOneAndUpdate({ '_id': user._id }, { "$pull": { "cart": { "id": item.id } } }, { new: true },
+                                                (err, userInfo) => {
+                                                    if (err) return res.status(400).send(err);
+                                                })
+                                        }
+                                    })
                             })
                         })
-                    })
                 }
             })
         })
-        .exec((err,success)=>{
-            if(err) return res.status(200).json({err:err})
-            return res.status(200).json({success:true,err:false})
-        })
+            .exec((err, success) => {
+                if (err) return res.status(200).json({ err: err })
+                return res.status(200).json({ success: true, err: false })
+            })
     })
 });
 

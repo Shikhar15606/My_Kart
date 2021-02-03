@@ -34,7 +34,7 @@ export function loginUser(dataToSubmit) {
 export function auth() {
     const request = axios.get(`${USER_SERVER}/auth`)
         .then(response => response.data);//response.data is returned to request
-        // so request = response.data
+    // so request = response.data
 
     return {
         type: AUTH_USER,
@@ -53,7 +53,7 @@ export function logoutUser() {
 }
 
 
-export function addToCart(_id,stock) {
+export function addToCart(_id, stock) {
     const request = axios.get(`${USER_SERVER}/addToCart?productId=${_id}&stock=${stock}`)
         .then(response => response.data);
 

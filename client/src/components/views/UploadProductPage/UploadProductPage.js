@@ -6,7 +6,7 @@ import Axios from 'axios';
 import { useSelector } from "react-redux";
 import pic from './pre.gif';
 import ErrorPage from '../ErrorPage/ErrorPage';
-import {TINY_API_KEY} from '../../../key';
+import { TINY_API_KEY } from '../../../key';
 
 const { Title } = Typography;
 
@@ -28,9 +28,9 @@ function UploadProductPage(props) {
     const [StockValue, setStockValue] = useState(0)
     const [TypeValue, setTypeValue] = useState(1)
     const [Images, setImages] = useState([])
-    const [Priceerr,setPriceerr] = useState('')
-    const [Stockerr,setStockerr] = useState('')
-    const [Loading,setLoading] = useState(false)
+    const [Priceerr, setPriceerr] = useState('')
+    const [Stockerr, setStockerr] = useState('')
+    const [Loading, setLoading] = useState(false)
 
     const onTitleChange = (event) => {
         setTitleValue(event.currentTarget.value)
@@ -42,7 +42,7 @@ function UploadProductPage(props) {
 
     const onPriceChange = (event) => {
         setPriceValue(event.currentTarget.value)
-        if(event.target.value<0)
+        if (event.target.value < 0)
             setPriceerr('Price can\'t be negative')
         else
             setPriceerr('')
@@ -50,7 +50,7 @@ function UploadProductPage(props) {
 
     const onStockChange = (event) => {
         setStockValue(event.currentTarget.value)
-        if(event.target.value<0)
+        if (event.target.value < 0)
             setStockerr('Stock can\'t be negative')
         else
             setStockerr('')
@@ -70,8 +70,7 @@ function UploadProductPage(props) {
             !TypeValue || !Images || !StockValue) {
             return alert('fill all the fields first!')
         }
-        if(Stockerr !=='' || Priceerr!== '')
-        {
+        if (Stockerr !== '' || Priceerr !== '') {
             return alert("Invalid Input")
         }
         const variables = {
@@ -95,10 +94,8 @@ function UploadProductPage(props) {
                 }
             })
     }
-    if(!Loading)    
-    {
-        if(user.userData && user.userData.isAdmin)
-        {
+    if (!Loading) {
+        if (user.userData && user.userData.isAdmin) {
             return (
                 <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
                     <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -127,12 +124,12 @@ function UploadProductPage(props) {
                                 height: 500,
                                 menubar: false,
                                 plugins: [
-                                'advlist autolink lists link image charmap print preview anchor',
-                                'searchreplace visualblocks code fullscreen',
-                                'insertdatetime media table paste code help wordcount'
+                                    'advlist autolink lists link image charmap print preview anchor',
+                                    'searchreplace visualblocks code fullscreen',
+                                    'insertdatetime media table paste code help wordcount'
                                 ],
                                 toolbar:
-                                'undo redo | formatselect | bold italic backcolor | \alignleft aligncenter alignright alignjustify | \bullist numlist outdent indent | removeformat | help'
+                                    'undo redo | formatselect | bold italic backcolor | \alignleft aligncenter alignright alignjustify | \bullist numlist outdent indent | removeformat | help'
                             }}
                             value={DescriptionValue}
                             onEditorChange={onDescriptionChange}
@@ -145,7 +142,7 @@ function UploadProductPage(props) {
                             value={PriceValue}
                             type="number"
                         />
-                        { Priceerr && <div className="input-feedback" style={{marginTop:"5px"}}>{Priceerr}</div>}
+                        {Priceerr && <div className="input-feedback" style={{ marginTop: "5px" }}>{Priceerr}</div>}
                         <br /><br />
                         <label>Stock</label>
                         <Input
@@ -153,7 +150,7 @@ function UploadProductPage(props) {
                             value={StockValue}
                             type="number"
                         />
-                        {Stockerr!=='' && <div className="input-feedback" style={{marginTop:5}}>{Stockerr}</div>}
+                        {Stockerr !== '' && <div className="input-feedback" style={{ marginTop: 5 }}>{Stockerr}</div>}
                         <br /><br />
                         <select onChange={onTypesSelectChange} value={TypeValue}>
                             {Types.map(item => (
@@ -174,27 +171,25 @@ function UploadProductPage(props) {
                 </div>
             )
         }
-        else if(user.userData && !user.userData.isAdmin )
-        {
-            return(
+        else if (user.userData && !user.userData.isAdmin) {
+            return (
                 <ErrorPage />
             )
         }
-        else
-        {
-            return(
-            <div style={{textAlign:"center",marginTop:"30vh"}}>
-                <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
-                <h3 style={{marginTop:"5vh"}}>Loading ...</h3>
-            </div>
+        else {
+            return (
+                <div style={{ textAlign: "center", marginTop: "30vh" }}>
+                    <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
+                    <h3 style={{ marginTop: "5vh" }}>Loading ...</h3>
+                </div>
             )
         }
     }
-    else{
-        return(
-            <div style={{textAlign:"center",marginTop:"30vh"}}>
-              <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
-              <h3 style={{marginTop:"5vh"}}>Uploading Product ...</h3>
+    else {
+        return (
+            <div style={{ textAlign: "center", marginTop: "30vh" }}>
+                <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
+                <h3 style={{ marginTop: "5vh" }}>Uploading Product ...</h3>
             </div>
         )
     }

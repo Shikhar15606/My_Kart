@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
         default: []
     },
     image: {
-        type:String,
+        type: String,
         default: "https://img.pngio.com/user-logos-user-logo-png-1920_1280.png"
     },
     token: {
@@ -48,8 +48,7 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre('save', function (next) {
     var user = this;
-    if (user.isModified('password'))
-    {
+    if (user.isModified('password')) {
         bcrypt.genSalt(saltRounds, function (err, salt) {
             if (err) return next(err);
 
@@ -59,7 +58,7 @@ userSchema.pre('save', function (next) {
                 next()
             })
         })
-    } 
+    }
     else {
         next()
     }

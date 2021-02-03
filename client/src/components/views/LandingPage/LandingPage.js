@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
 import { Icon, Col, Card, Row } from 'antd';
 import ImageSlider from '../../utils/ImageSlider';
@@ -6,8 +6,8 @@ import CheckBox from './Sections/CheckBox';
 import RadioBox from './Sections/RadioBox';
 import { types, price } from './Sections/Datas';
 import SearchFeature from './Sections/SearchFeature';
-import {Link} from 'react-router-dom';
-import {Badge,Button} from 'reactstrap';
+import { Link } from 'react-router-dom';
+import { Badge, Button } from 'reactstrap';
 
 const { Meta } = Card;
 
@@ -18,7 +18,7 @@ function LandingPage() {
     const [Limit, setLimit] = useState(8)
     const [PostSize, setPostSize] = useState()
     const [SearchTerms, setSearchTerms] = useState("")
-    const [IsLoading , setIsLoading] = useState(true)
+    const [IsLoading, setIsLoading] = useState(true)
     const [Filters, setFilters] = useState({
         types: [],
         price: []
@@ -31,7 +31,7 @@ function LandingPage() {
             limit: Limit,
         }
 
-        getProducts(variables)  
+        getProducts(variables)
     }, [])
 
     const getProducts = (variables) => {
@@ -47,7 +47,7 @@ function LandingPage() {
                 } else {
                     alert('Failed to fectch product datas')
                 }
-            setIsLoading(false)
+                setIsLoading(false)
             })
     }
 
@@ -67,16 +67,16 @@ function LandingPage() {
 
 
     const renderCards = Products.map((product, index) => {
-        return( <Col lg={6} md={8} xs={24}>
-            <Link to={`/product/${product._id}`} style={{textDecoration:"none"}} >
+        return (<Col lg={6} md={8} xs={24}>
+            <Link to={`/product/${product._id}`} style={{ textDecoration: "none" }} >
                 <Card
                     hoverable={true}
                     cover={<ImageSlider images={product.images} />}
                 >
-                <Meta id="meta"
-                    title={product.title}
-                    description={<h3><Badge color="success">${product.price}</Badge></h3>}
-                />
+                    <Meta id="meta"
+                        title={product.title}
+                        description={<h3><Badge color="success">${product.price}</Badge></h3>}
+                    />
                 </Card>
             </Link>
         </Col>
@@ -141,15 +141,14 @@ function LandingPage() {
         getProducts(variables)
     }
 
-    if(IsLoading)
-    {
-        return(
+    if (IsLoading) {
+        return (
             <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
-                    <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
+                <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
             </div>
         )
     }
-    else{
+    else {
         return (
             <div style={{ width: '75%', margin: '3rem auto' }}>
                 <div style={{ textAlign: 'center' }}>
@@ -180,9 +179,9 @@ function LandingPage() {
                     />
                 </div>
                 {Products.length === 0 ?
-                <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
-                    <h3>No Product Found ...</h3>
-                </div> :
+                    <div style={{ display: 'flex', height: '300px', justifyContent: 'center', alignItems: 'center' }}>
+                        <h3>No Product Found ...</h3>
+                    </div> :
                     <div>
                         <Row gutter={[16, 16]}>
                             {renderCards}

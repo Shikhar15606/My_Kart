@@ -10,29 +10,28 @@ function FileUpload(props) {
     const onDrop = (files) => {
         setLoading(true)
         let formData = new FormData();
-        formData.append("upload_preset","my-kart")
+        formData.append("upload_preset", "my-kart")
         formData.append("file", files[0])
-        formData.append("cloud_name","https-mykart1-herokuapp-com")
-        fetch("https://api.cloudinary.com/v1_1/https-mykart1-herokuapp-com/image/upload",{
-            method:"post",
-            body:formData
+        formData.append("cloud_name", "https-mykart1-herokuapp-com")
+        fetch("https://api.cloudinary.com/v1_1/https-mykart1-herokuapp-com/image/upload", {
+            method: "post",
+            body: formData
         })
-        .then(res => res.json())
-        .then((response)=>{
+            .then(res => res.json())
+            .then((response) => {
                 setLoading(false)
-                if ( response.format === "jpg" || response.format === "png") {
-                    if(response.secure_url){
+                if (response.format === "jpg" || response.format === "png") {
+                    if (response.secure_url) {
                         setImages([...Images, response.secure_url])
                         props.refreshFunction([...Images, response.secure_url])
                     }
-                    else
-                    {
+                    else {
                         alert('Failed to save the Image')
                     }
                 } else {
                     alert('Only jpg and png files are allowed')
                 }
-        })
+            })
     }
     const onDelete = (image) => {
         const currentIndex = Images.indexOf(image);
@@ -43,8 +42,7 @@ function FileUpload(props) {
         setImages(newImages)
         props.refreshFunction(newImages)
     }
-    if(!Loading)
-    {
+    if (!Loading) {
         return (
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <Dropzone
@@ -77,12 +75,11 @@ function FileUpload(props) {
             </div>
         )
     }
-    else
-    {
-        return(
-            <div style={{textAlign:"center",marginTop:"30vh"}}>
-              <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
-              <h3 style={{marginTop:"5vh"}}>Uploading Image ...</h3>
+    else {
+        return (
+            <div style={{ textAlign: "center", marginTop: "30vh" }}>
+                <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
+                <h3 style={{ marginTop: "5vh" }}>Uploading Image ...</h3>
             </div>
         )
     }

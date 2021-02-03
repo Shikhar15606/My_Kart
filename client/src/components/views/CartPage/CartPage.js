@@ -31,7 +31,7 @@ function CartPage(props) {
                         }
                     })
             }
-            else{
+            else {
                 setLoading(false)
             }
         }
@@ -85,8 +85,7 @@ function CartPage(props) {
         console.log('Transaction canceled')
     }
 
-    if(!Loading)
-    {
+    if (!Loading) {
         return (
             <div style={{ width: '85%', margin: '3rem auto' }}>
                 <h1>My Cart</h1>
@@ -140,9 +139,9 @@ function CartPage(props) {
             </div>
         )
     }
-    else{
-        return(
-            <div style={{textAlign:"center",marginTop:"30vh"}}>
+    else {
+        return (
+            <div style={{ textAlign: "center", marginTop: "30vh" }}>
                 <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
             </div>
         )

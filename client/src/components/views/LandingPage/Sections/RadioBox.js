@@ -8,7 +8,7 @@ function RadioBox(props) {
     const [Value, setValue] = useState('0')
 
     const renderRadioBox = () => (
-        props.list &&  props.list.map((value) => (
+        props.list && props.list.map((value) => (
             <Radio key={value._id} value={`${value._id}`}>{value.name}</Radio>
         ))
     )

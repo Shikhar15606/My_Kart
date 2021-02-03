@@ -1,21 +1,23 @@
-@import "~react-image-gallery/styles/css/image-gallery.css";
+@import '~react-image-gallery/styles/css/image-gallery.css';
 @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,700;1,400&display=swap');
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-size: 14px;
   line-height: 1.5;
   color: #24292e;
@@ -34,7 +36,6 @@ input.error {
   border-color: red;
 }
 
-
 .input-feedback {
   color: red;
   height: 5px;
@@ -47,7 +48,8 @@ table {
   width: 100%;
 }
 
-td,th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
@@ -56,53 +58,53 @@ td,th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
-.google-btn{
+.google-btn {
   display: inline-block;
-  color:white;
+  color: white;
   font-family: 'Balsamiq Sans', cursive;
   background-color: red;
   width: 350px;
   padding: 5px;
   border-radius: 4px;
   background: #db3236;
-  border:0px transparent;  
-  margin:5px;
+  border: 0px transparent;
+  margin: 5px;
   cursor: pointer;
   font-size: 20px;
   text-align: left;
 }
-.facebook-btn{
+.facebook-btn {
   display: inline-block;
-  color:white;
+  color: white;
   font-family: 'Balsamiq Sans', cursive;
   background-color: red;
   width: 350px;
-  padding:5px;
+  padding: 5px;
   border-radius: 4px;
   background: #3b5998;
-  border:0px transparent;  
-  margin:5px;
+  border: 0px transparent;
+  margin: 5px;
   cursor: pointer;
   font-size: 20px;
   text-align: left;
 }
-.facebook-btn:hover{
+.facebook-btn:hover {
   background: #3b5998;
   opacity: 0.6;
 }
-.google-btn:hover{
+.google-btn:hover {
   background: #db3236;
   opacity: 0.6;
 }
-#facebook-text{
+#facebook-text {
   margin-left: 65px;
 }
-#google-text{
+#google-text {
   margin-left: 60px;
 }
-#facebook-icon{
+#facebook-icon {
   margin-left: 5px;
 }
-#google-icon{
+#google-icon {
   margin-left: 5px;
 }

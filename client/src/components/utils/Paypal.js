@@ -9,7 +9,7 @@ export default class Paypal extends React.Component {
             console.log("The payment was succeeded!", payment);
             // You can bind the "payment" object's value to your state or props or whatever here, please see below for sample returned data
             this.props.onSuccess(payment);
-        
+
         }
 
         const onCancel = (data) => {
@@ -50,13 +50,13 @@ export default class Paypal extends React.Component {
                 onError={onError}
                 onSuccess={onSuccess}
                 onCancel={onCancel}
-                style={{ 
-                    size:'large',
-                    color:'blue',
+                style={{
+                    size: 'large',
+                    color: 'blue',
                     shape: 'rect',
                     label: 'checkout'
                 }}
-                 />
+            />
         );
     }
 }

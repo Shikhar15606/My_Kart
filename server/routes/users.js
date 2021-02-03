@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require("../models/User");
 const { Product } = require('../models/Product');
-const { auth, googlelogin ,facebooklogin } = require("../middleware/auth");
+const { auth, googlelogin, facebooklogin } = require("../middleware/auth");
 const { Payment } = require('../models/Payment');
 const jwt = require('jsonwebtoken');
 const async = require('async');
@@ -31,15 +31,15 @@ router.get("/auth", auth, (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-    const {name,lastname,email,password} = req.body;
+    const { name, lastname, email, password } = req.body;
     console.log(lastname);
-    User.findOne({email:email}).exec((err, user) => {
-        if(user){
-            return res.status(200).json({success:false, error: "User with given email already exists."})
+    User.findOne({ email: email }).exec((err, user) => {
+        if (user) {
+            return res.status(200).json({ success: false, error: "User with given email already exists." })
         }
-        else{
+        else {
 
-            const token = jwt.sign({name,email,password,lastname},'travelmernsecretkey',{expiresIn: '20m'});
+            const token = jwt.sign({ name, email, password, lastname }, 'travelmernsecretkey', { expiresIn: '20m' });
             let transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
@@ -48,92 +48,88 @@ router.post("/register", (req, res) => {
                     user: 'mykart.inc', // generated ethereal user
                     pass: config.emailPASSWORD // generated ethereal password
                 },
-                tls:{
-                  rejectUnauthorized:false
+                tls: {
+                    rejectUnauthorized: false
                 }
-              });
-            
-              // setup email data with unicode symbols
-              let mailOptions = {
-                  from: '"My Kart" <your@email.com>', // sender address
-                  to: req.body.email, // list of receivers
-                  subject: 'Account Activation Link', // Subject line
-                  html: `
+            });
+
+            // setup email data with unicode symbols
+            let mailOptions = {
+                from: '"My Kart" <your@email.com>', // sender address
+                to: req.body.email, // list of receivers
+                subject: 'Account Activation Link', // Subject line
+                html: `
                       <h2> Please click on given link to activate your account <h2>
                       <h4> This link will expire in 20 minutes <h4> 
                       <a href="https://mykart1.herokuapp.com/activate/${token}">Click Here</a>
                     ` // html body
-              };
-            
-              // send mail with defined transport object
-              transporter.sendMail(mailOptions, (error, info) => {
-                if(error)
-                    {
-                        return res.json({
-                            error: error.message
-                        })
-                    }
-                    return res.json({success:true,message:"Account verification link sent at your email kindly activate your account by clicking on that link"})
-          });
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.json({
+                        error: error.message
+                    })
+                }
+                return res.json({ success: true, message: "Account verification link sent at your email kindly activate your account by clicking on that link" })
+            });
         }
     })
 });
 
 
-router.post("/dashboard/update" ,(req,res) =>{
+router.post("/dashboard/update", (req, res) => {
     console.log(req.body);
-    const {email , image , name , lastname } = req.body;
-    User.findOne({email:email},(err,user) => {
-        if(err)
-        return res.status(200).json({err:err})
-        else
-        {
+    const { email, image, name, lastname } = req.body;
+    User.findOne({ email: email }, (err, user) => {
+        if (err)
+            return res.status(200).json({ err: err })
+        else {
             user.image = image;
             user.name = name;
             user.lastname = lastname;
             user.save((err, doc) => {
-                if (err) return res.json({ success:false ,err:err });
+                if (err) return res.json({ success: false, err: err });
                 return res.status(200).json({
-                    success: true 
+                    success: true
                 });
             })
         }
     })
 });
 
-router.post("/authentication/activate/",(req,res)=>{
+router.post("/authentication/activate/", (req, res) => {
     const token = req.body.token;
-    if(token){
-        jwt.verify(token,'travelmernsecretkey',(err,decodedtoken) =>{
-            if(err){
-                return res.status(200).json({error:"Incorrect or Expired Token"})
+    if (token) {
+        jwt.verify(token, 'travelmernsecretkey', (err, decodedtoken) => {
+            if (err) {
+                return res.status(200).json({ error: "Incorrect or Expired Token" })
             }
-            else{
-                const {name,email,password,lastname} = decodedtoken
-                const user = new User({name,email,password,lastname});
+            else {
+                const { name, email, password, lastname } = decodedtoken
+                const user = new User({ name, email, password, lastname });
                 user.save((err, doc) => {
-                if (err) return res.json({ success: false, err });
-                return res.status(200).json({
-                    success: true
-                });
+                    if (err) return res.json({ success: false, err });
+                    return res.status(200).json({
+                        success: true
+                    });
                 });
             }
         })
     }
-    else
-    {
-        return res.json({err:"Something went Wrong !!!"})
+    else {
+        return res.json({ err: "Something went Wrong !!!" })
     }
 })
 
-router.post("/forgotpassword", (req,res) => {
-    const {email} = req.body;
-    User.findOne({email} , (err, user) =>{
-        if(err)
-        return res.status(200).json({error: err.errmsg})
-        if(user)
-        {
-            const token = jwt.sign({_id:user._id},'travelmernsecretkeyforpasswordreset',{expiresIn: '20m'});
+router.post("/forgotpassword", (req, res) => {
+    const { email } = req.body;
+    User.findOne({ email }, (err, user) => {
+        if (err)
+            return res.status(200).json({ error: err.errmsg })
+        if (user) {
+            const token = jwt.sign({ _id: user._id }, 'travelmernsecretkeyforpasswordreset', { expiresIn: '20m' });
             let transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
                 port: 587,
@@ -142,56 +138,52 @@ router.post("/forgotpassword", (req,res) => {
                     user: 'mykart.inc@gmail.com', // generated ethereal user
                     pass: config.emailPASSWORD  // generated ethereal password
                 },
-                tls:{
-                  rejectUnauthorized:false
+                tls: {
+                    rejectUnauthorized: false
                 }
-              });
-            
-              // setup email data with unicode symbols
-              let mailOptions = {
-                  from: '"My Kart" <your@email.com>', // sender address
-                  to: req.body.email, // list of receivers
-                  subject: 'Reset Password Link', // Subject line
-                  html:`
+            });
+
+            // setup email data with unicode symbols
+            let mailOptions = {
+                from: '"My Kart" <your@email.com>', // sender address
+                to: req.body.email, // list of receivers
+                subject: 'Reset Password Link', // Subject line
+                html: `
                 <h2> Please click on given link to Reset your Password <h2>
                 <h4> This link will expire in 20 minutes <h4> 
                 <a href="https://mykart1.herokuapp.com/resetpassword/${token}">Click Here</a>
                 `};
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if(error)
-                        {
-                            return res.json({
-                                error: error.message
-                            })
-                        }
-                        return res.json({success:true,message:"Password Reset Link sent at your email kindly activate your account by clicking on that link"})
-              });
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    return res.json({
+                        error: error.message
+                    })
+                }
+                return res.json({ success: true, message: "Password Reset Link sent at your email kindly activate your account by clicking on that link" })
+            });
         }
         else
-        return res.status(200).json({error: "User with this email does not exist"})
+            return res.status(200).json({ error: "User with this email does not exist" })
     })
 })
 
-router.post('/resetpassword',(req,res) =>{
-    const {token,password} = req.body;
-    if(token && password)
-    {
-        if(password.length < 6)
-        return res.status(200).json({error:"Password must have more than 6 characters"})
-        jwt.verify(token,'travelmernsecretkeyforpasswordreset',(err,decodedtoken) => {
-            if(err)
-            {
-                return res.status(200).json({error:"Incorrect or Expired Token !!!"})
+router.post('/resetpassword', (req, res) => {
+    const { token, password } = req.body;
+    if (token && password) {
+        if (password.length < 6)
+            return res.status(200).json({ error: "Password must have more than 6 characters" })
+        jwt.verify(token, 'travelmernsecretkeyforpasswordreset', (err, decodedtoken) => {
+            if (err) {
+                return res.status(200).json({ error: "Incorrect or Expired Token !!!" })
             }
-            const {_id} = decodedtoken;
-            User.findOne({_id:_id},(err,user) => {
-                if(err)
-                return res.status(200).json({error:err})
-                else
-                {
+            const { _id } = decodedtoken;
+            User.findOne({ _id: _id }, (err, user) => {
+                if (err)
+                    return res.status(200).json({ error: err })
+                else {
                     user.password = password
                     user.save((err, doc) => {
-                        if (err) return res.json({ error:err });
+                        if (err) return res.json({ error: err });
                         return res.status(200).json({
                             success: true
                         });
@@ -200,8 +192,8 @@ router.post('/resetpassword',(req,res) =>{
             })
         })
     }
-    else{
-        return res.status(200).json({error:"Password is Empty !!!"})
+    else {
+        return res.status(200).json({ error: "Password is Empty !!!" })
     }
 })
 router.post("/login", (req, res) => {
@@ -244,7 +236,7 @@ router.get("/logout", auth, (req, res) => {
 
 
 router.get('/addToCart', auth, (req, res) => {
-    
+
     User.findOne({ _id: req.user._id }, (err, userInfo) => {
         let duplicate = false;
         let full = false;
@@ -253,17 +245,16 @@ router.get('/addToCart', auth, (req, res) => {
         userInfo.cart.forEach((item) => {
             if (item.id == req.query.productId) {
                 duplicate = true;
-                if(item.quantity >= req.query.stock)
+                if (item.quantity >= req.query.stock)
                     full = true
             }
         })
 
 
         if (duplicate) {
-            if(full)
-                {
-                    return res.json({ full: true});
-                }
+            if (full) {
+                return res.json({ full: true });
+            }
             User.findOneAndUpdate(
                 { _id: req.user._id, "cart.id": req.query.productId },
                 { $inc: { "cart.$.quantity": 1 } },
@@ -274,10 +265,9 @@ router.get('/addToCart', auth, (req, res) => {
                 }
             )
         } else {
-            if(full)
-                {
-                    return res.json({ full: true});
-                }
+            if (full) {
+                return res.json({ full: true });
+            }
             User.findOneAndUpdate(
                 { _id: req.user._id },
                 {
@@ -359,7 +349,7 @@ router.post('/successBuy', auth, (req, res) => {
     //1.Put brief Payment Information inside User Collection 
     req.body.cartDetail.forEach((item) => {
         history.push({
-            dateOfPurchase:`${mydate.getDate()} ${mydate.toLocaleString('default', { month: 'long' })} ${mydate.getFullYear()} at ${mydate.getHours()}:${mydate.getMinutes()}:${mydate.getSeconds()}`,
+            dateOfPurchase: `${mydate.getDate()} ${mydate.toLocaleString('default', { month: 'long' })} ${mydate.getFullYear()} at ${mydate.getHours()}:${mydate.getMinutes()}:${mydate.getSeconds()}`,
             name: item.title,
             id: item._id,
             price: item.price,
@@ -412,44 +402,43 @@ router.post('/successBuy', auth, (req, res) => {
                             }
                         },
                         { new: false },
-                        (err,success)=>{
-                            if(err) return res.status(200).json({err:err})
-                            User.find({},(err,users) => {
-                                if(err) return res.status(200).json({err:err})
-                                users.forEach((user)=>{
+                        (err, success) => {
+                            if (err) return res.status(200).json({ err: err })
+                            User.find({}, (err, users) => {
+                                if (err) return res.status(200).json({ err: err })
+                                users.forEach((user) => {
                                     {
-                                        User.findOne({'_id': { $in: [user] }})
-                                        .exec((err,user)=>{
-                                            if(err) return res.status(200).json({err:err})
-                                            let cart = user.cart;
-                                            let array = cart.map(item => {
-                                                return ({ id:item.id,quantity:item.quantity})
-                                            })
-                                            array.forEach((item)=>{
-                                                Product.findOne({'_id':item.id})
-                                                .exec((err,ItemDetail)=>{
-                                                    if (err) return res.status(400).send(err);
-                                                    console.log(ItemDetail.stock)
-                                                    if(item.quantity > ItemDetail.stock)
-                                                    {
-                                                        User.findOneAndUpdate({ '_id': user._id },{"$pull":{ "cart": { "id": item.id } }},{ new: false },
-                                                            (err, userInfo) => {
-                                                            if (err) return res.status(400).send(err); 
-                                                            })
-                                                    }
+                                        User.findOne({ '_id': { $in: [user] } })
+                                            .exec((err, user) => {
+                                                if (err) return res.status(200).json({ err: err })
+                                                let cart = user.cart;
+                                                let array = cart.map(item => {
+                                                    return ({ id: item.id, quantity: item.quantity })
+                                                })
+                                                array.forEach((item) => {
+                                                    Product.findOne({ '_id': item.id })
+                                                        .exec((err, ItemDetail) => {
+                                                            if (err) return res.status(400).send(err);
+                                                            console.log(ItemDetail.stock)
+                                                            if (item.quantity > ItemDetail.stock) {
+                                                                User.findOneAndUpdate({ '_id': user._id }, { "$pull": { "cart": { "id": item.id } } }, { new: false },
+                                                                    (err, userInfo) => {
+                                                                        if (err) return res.status(400).send(err);
+                                                                    })
+                                                            }
+                                                        })
                                                 })
                                             })
-                                        })
                                     }
                                 })
                             })
-                            .exec((err,success)=>{
-                                res.status(200).json({
-                                    success: true,
-                                    cart: user.cart,
-                                    cartDetail: []
+                                .exec((err, success) => {
+                                    res.status(200).json({
+                                        success: true,
+                                        cart: user.cart,
+                                        cartDetail: []
+                                    })
                                 })
-                            })
                         }
                     )
                 }, (err) => {

@@ -15,49 +15,48 @@ function DetailProductPage(props) {
     useEffect(() => {
         Axios.get(`/api/product/products_by_id?id=${productId}&type=single`)
             .then((response) => {
-                    setProduct(response.data)
-                    setLoading(false)
+                setProduct(response.data)
+                setLoading(false)
             })
     }, [])
 
-    const addToCartHandler = (productId,stock) => {
-        dispatch(addToCart(productId,stock))
+    const addToCartHandler = (productId, stock) => {
+        dispatch(addToCart(productId, stock))
     }
-    if(isLoading)
-    {
-        return(
-            <div style={{textAlign:"center",marginTop:"30vh"}}>
+    if (isLoading) {
+        return (
+            <div style={{ textAlign: "center", marginTop: "30vh" }}>
                 <span className="fa fa-spinner fa-pulse fa-5x fa-fw text-primary"></span>
-                <h3 style={{marginTop:"5vh"}}>Loading ...</h3>
-        </div>
+                <h3 style={{ marginTop: "5vh" }}>Loading ...</h3>
+            </div>
         )
     }
-    else if(Product){
-    return (
-        <div className="postPage" style={{ width: '100%', padding: '3rem 4rem' }}>
+    else if (Product) {
+        return (
+            <div className="postPage" style={{ width: '100%', padding: '3rem 4rem' }}>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <h1>{Product.title}</h1>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <h1>{Product.title}</h1>
+                </div>
+
+                <br />
+
+                <Row gutter={[16, 16]} >
+                    <Col lg={12} xs={24}>
+                        <ProductImage detail={Product} />
+                    </Col>
+                    <Col lg={12} xs={24}>
+                        <ProductInfo
+                            addToCart={addToCartHandler}
+                            detail={Product} />
+                    </Col>
+                </Row>
             </div>
-
-            <br />
-
-            <Row gutter={[16, 16]} >
-                <Col lg={12} xs={24}>
-                    <ProductImage detail={Product} />
-                </Col>
-                <Col lg={12} xs={24}>
-                    <ProductInfo
-                        addToCart={addToCartHandler}
-                        detail={Product} />
-                </Col>
-            </Row>
-        </div>
-    )
+        )
     }
-    else{
-        return(
-        <ErrorPage/>
+    else {
+        return (
+            <ErrorPage />
         )
     }
 }

@@ -86,46 +86,46 @@ export class UploadProductPage extends Component {
     render() {
         return (
             <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                <Title level={2} > Upload Travel Product</Title>
-            </div>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                    <Title level={2} > Upload Travel Product</Title>
+                </div>
 
-            <Form onSubmit={this.onSubmit}>
-               
-               <FileUpload refreshFunction={this.updateFiles} />
+                <Form onSubmit={this.onSubmit}>
 
-                <br /><br />
-                <label>Title</label>
-                <Input
-                    onChange={this.handleChangeTitle}
-                    value={this.state.title}
-                />
-                <br /><br />
-                <label>Description</label>
-                <TextArea
-                    onChange={this.handleChangeDecsription}
-                    value={this.state.description}
-                />
-                <br /><br />
-                <label>Price($)</label>
-                <Input
-                    type="number"
-                    onChange={this.handleChangePrice}
-                    value={this.state.price}
-                />
-                <br /><br />
-                <select onChange={this.handleChangeTypes}>
-                    {Types.map(item => (
-                        <option key={item.key} value={item.key}>{item.value}</option>
-                    ))}
-                </select>
-                <br /><br />
+                    <FileUpload refreshFunction={this.updateFiles} />
 
-                <Button type="primary" size="large" onClick={this.onSubmit}>
-                    Submit
+                    <br /><br />
+                    <label>Title</label>
+                    <Input
+                        onChange={this.handleChangeTitle}
+                        value={this.state.title}
+                    />
+                    <br /><br />
+                    <label>Description</label>
+                    <TextArea
+                        onChange={this.handleChangeDecsription}
+                        value={this.state.description}
+                    />
+                    <br /><br />
+                    <label>Price($)</label>
+                    <Input
+                        type="number"
+                        onChange={this.handleChangePrice}
+                        value={this.state.price}
+                    />
+                    <br /><br />
+                    <select onChange={this.handleChangeTypes}>
+                        {Types.map(item => (
+                            <option key={item.key} value={item.key}>{item.value}</option>
+                        ))}
+                    </select>
+                    <br /><br />
+
+                    <Button type="primary" size="large" onClick={this.onSubmit}>
+                        Submit
                 </Button>
-            </Form>
-        </div>
+                </Form>
+            </div>
         )
     }
 }

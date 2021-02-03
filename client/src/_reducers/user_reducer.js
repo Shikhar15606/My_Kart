@@ -21,20 +21,19 @@ export default function (state = {}, action) {
         case LOGOUT_USER:
             return { ...state }
         case ADD_TO_CART_USER:
-            if(action.payload.full)
-            {   
+            if (action.payload.full) {
                 alert("No more items in the stock")
-                return{
+                return {
                     ...state
                 }
             }
-            else{
-            return {
-                ...state, userData: {
-                    ...state.userData,
-                    cart: action.payload
+            else {
+                return {
+                    ...state, userData: {
+                        ...state.userData,
+                        cart: action.payload
+                    }
                 }
-            }
             }
         case GET_CART_ITEMS_USER:
             return {
